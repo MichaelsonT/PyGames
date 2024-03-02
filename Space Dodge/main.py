@@ -251,6 +251,7 @@ def game():
                         spaceship.reset()
                         game_state = 0
                         prepare_time = 4
+                        star_add_increment = 2000
                         start_time = time.time()
                         pygame.mixer.music.play(-1)
                         end_time = 0
@@ -287,6 +288,7 @@ def game():
                         prepare_time = 4
                         start_time = time.time()
                         end_time = 0
+                        star_add_increment = 2000
                         pygame.mixer.music.play(-1)
                         menu.main_menu()
                         break
