@@ -11,15 +11,23 @@ Keep coming back to see more features.
 ## Gameplan:
 
 A spaceship running from stars ✔️
+
 A spaceship moving in 2 axes ✔️
+
 A spaceship shooting ✔️
+
 At least 2 power-ups ☐
-triple shot ☐
-lasers ☐
+          triple shot ☐
+          lasers ☐
+
 A start menu ✔️
+
 At least 2 different levels ☐
+
 Retry and Return to menu buttons ☐
+
 Random stars falling ✔️
+
 A final boss 🤔? ☐
 
-I accept Suggestions.:D
+## I accept more Suggestions.:D
