@@ -29,3 +29,12 @@ Random stars falling ✔️
 A final boss 🤔? ☐
 
 ## 🚀🤩 I accept more Suggestions 🤩🚀
+
+<img src="./Gameplay_img/Menu.PNG" width=500 height=500>
+<img src="./Gameplay_img/space.PNG" width=500 height=500>
+
+
+
+
+
+
