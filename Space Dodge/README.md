@@ -3,6 +3,7 @@
 🚀Check my little game :D🚀
 
 To play the game, you just need to double-click the main.py.
+Dont forget to have python(https://www.python.org/) and pygames installed(on cmd "pip install pygame")
 
 Can u beat my High Score 🤩!?
 
