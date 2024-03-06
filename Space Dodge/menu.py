@@ -46,7 +46,7 @@ def main_menu():
         mouse_pos = pygame.mouse.get_pos()  # Get the current mouse position
 
         # Draw buttons
-        draw_button(start_button, "Survivel Mode", mouse_pos)  
+        draw_button(start_button, "Survival Mode", mouse_pos)  
         draw_button(boss_button, "Boss Battle", mouse_pos)
         draw_button(mix_button, "Mix Mode", mouse_pos)
         draw_button(quit_button, "Quit", mouse_pos)  
