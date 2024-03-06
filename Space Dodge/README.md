@@ -1,4 +1,4 @@
-# Can you survive the ☄️meteors☄️ ?
+# Can you survive the meteors☄️ and defeat the Star Monster👾?
 
 🚀Check my little game :D🚀
 
