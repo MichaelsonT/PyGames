@@ -5,8 +5,6 @@ import os
 pygame.font.init()
 pygame.mixer.init()
 
-
-
 ship_hit = pygame.mixer.Sound("ship_hit.mp3")
 star_hit = pygame.mixer.Sound("star_hit.mp3")
 blaster = pygame.mixer.Sound("blaster.mp3")
@@ -134,7 +132,7 @@ class Spaceship(pygame.sprite.Sprite):
             explosion_group.add(explosion)
             self.kill()
             game_state = -1
-        
+
         if pygame.sprite.spritecollide(self, boss_group, False, pygame.sprite.collide_mask):
             if spaceship.is_shielded == False:
                 spaceship.health_rem -=1
@@ -142,9 +140,9 @@ class Spaceship(pygame.sprite.Sprite):
             explosion_group.add(explosion)
             ship_hit.set_volume(0.2)
             ship_hit.play()
-            
         
         return game_state
+    
 
     def reset(self):
         self.health_rem= self.health_start
@@ -165,6 +163,13 @@ class Bullets(pygame.sprite.Sprite):
             self.kill()
 
         self.mask = pygame.mask.from_surface(self.image)    
+        
+        if pygame.sprite.spritecollide(self, star_group, True, pygame.sprite.collide_mask):
+            self.kill()
+            star_hit.set_volume(0.05)
+            star_hit.play()
+            explosion = Explosion(self.rect.centerx, self.rect.centery, 2)
+            explosion_group.add(explosion)
         
         if pygame.sprite.spritecollide(self, boss_group, False, pygame.sprite.collide_mask):
             boss.health_rem -=1
@@ -195,6 +200,12 @@ class Laser(pygame.sprite.Sprite):
             self.kill()
 
         self.mask = pygame.mask.from_surface(self.image)    
+        
+        if pygame.sprite.spritecollide(self, star_group, True, pygame.sprite.collide_mask):
+            star_hit.set_volume(0.05)
+            star_hit.play()
+            explosion = Explosion(self.rect.centerx, self.rect.centery, 2)
+            explosion_group.add(explosion)
         
         if pygame.sprite.spritecollide(self, boss_group, False, pygame.sprite.collide_mask):
             boss.health_rem -= 0.50
@@ -272,6 +283,7 @@ class Boss(pygame.sprite.Sprite):
             self.move_direction *= -1 
 
         #shoot
+            
         if self.health_rem < self.health_start / 2:
             self.shoot_interval = 45    
         self.shoot_timer += 1
@@ -286,6 +298,7 @@ class Boss(pygame.sprite.Sprite):
             self.shoot_timer = 0  
         
         
+            
         #update mask
         self.mask = pygame.mask.from_surface(self.image)
        
@@ -313,6 +326,28 @@ class Boss_bullets(pygame.sprite.Sprite):
         self.image = pygame.image.load("Star.png")
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
+
+    def update(self):
+        self.rect.y += star_speed
+        if self.rect.bottom > screen_height + 80:
+            self.kill()
+        if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
+            if spaceship.is_shielded == False:
+                spaceship.health_rem -=1
+            explosion = Explosion(self.rect.centerx, self.rect.centery, 3)
+            explosion_group.add(explosion)
+            ship_hit.set_volume(0.2)
+            ship_hit.play()
+            self.kill()
+        
+
+#stars
+class Stars(pygame.sprite.Sprite):
+    def __init__(self, x):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("Star.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, -10]
 
     def update(self):
         self.rect.y += star_speed
@@ -368,12 +403,18 @@ class Power_ups(pygame.sprite.Sprite):
 # create sprite groups
 spaceship_group = pygame.sprite.Group() 
 bullet_group = pygame.sprite.Group()
-boss_bullets_group = pygame.sprite.Group()
-boss_group = pygame.sprite.Group()
+star_group = pygame.sprite.Group()
 explosion_group = pygame.sprite.Group()
 power_up_group = pygame.sprite.Group()
 laser_group = pygame.sprite.Group()
+boss_bullets_group = pygame.sprite.Group()
+boss_group = pygame.sprite.Group()
 
+def spawn_stars():
+    for _ in range(3):
+        x = random.randint(0, screen_width)
+        new_star = Stars(x)  # Assuming the star image is not larger than 20px in height
+        star_group.add(new_star)
 
 def draw_text(text, font, color, x, y):
     img = font.render(text, True, color)
@@ -404,7 +445,7 @@ spaceship_group.add(spaceship)
 boss = Boss(int(screen_width/2), 200, boss_health)
 boss_group.add(boss)
 
-def game_boss():
+def mix_game():
     run = True
     
     game_state = 0
@@ -413,68 +454,127 @@ def game_boss():
     elapsed_time = 0
     start_time = time.time()
 
+    fade_counter = 0
+
+    star_add_increment = 2000 # first star
     start_count = 0 #when we get the next star
+
+    prepare_time = 3
+    last_second = pygame.time.get_ticks()
+    
+    if os.path.exists("score_mix.txt"):
+        with open("score_mix.txt", "r") as file:
+            score = float(file.read())
+    else:    
+        score = 0
 
     while run:  #gameloop
         start_count += clock.tick(fps)
 
         draw_bg()
-        
-        if game_state == 0:
+        if prepare_time == 0:
+            if game_state == 0:
+                if start_count > star_add_increment:
+                    spawn_stars()
+                    star_add_increment = max(200, star_add_increment - 50)
+                    start_count = 0
 
-            #time
-            elapsed_time = time.time() - start_time
-            time_text = FONT30.render(f"Time: {round(elapsed_time)}s", 1, "white")
-            screen.blit(time_text, (10, 10))
+                #time
+                elapsed_time = time.time() - start_time - 3
+                time_text = FONT30.render(f"Time: {round(elapsed_time)}s", 1, "white")
+                screen.blit(time_text, (10, 10))
 
-            if elapsed_time > 20:
-                spawn_power_up()
+                #score
+                time_text = FONT30.render(f"Score: {score}s", 1, "white")
+                screen.blit(time_text, (10, 50))
                 
-            #update spaceship and game state
-            game_state = spaceship.update()
-            
-            #update sprite groups
-            bullet_group.update()
-            boss_bullets_group.update()
-            power_up_group.update()
-            laser_group.update()
-            boss_group.update()
-
-            #draw sprite groups
-            spaceship_group.draw(screen)
-            bullet_group.draw(screen)
-            boss_group.draw(screen)
-            boss_bullets_group.draw(screen)
-            power_up_group.draw(screen)
-            laser_group.draw(screen)
-
-            #check boss hp and change game state
-            if boss.health_rem == 0:
-                game_state = 1
                 
-        else:
-            if game_state == -1:    
-                draw_text("Game Over", FONT50, "white", screen_width / 2, screen_height / 2)
-                draw_text("Press R to restart or M for menu", FONT30, "white", screen_width / 2, screen_height / 2 + 100)
-            elif game_state == 1:  
-                draw_text("You Win!!", FONT50, "white", screen_width / 2, screen_height / 2)
-                draw_text("Press R to restart or M for menu", FONT30, "white", screen_width / 2, screen_height / 2 + 100)
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_r]:
-                boss_bullets_group.empty()
-                bullet_group.empty()
-                power_up_group.empty()
-                spaceship.reset()
-                boss.reset()
-                game_state = 0
-                start_time = time.time()
-                pygame.mixer.music.play(-1)
+                if elapsed_time > 20:
+                    spawn_power_up()
                 
+                #update spaceship and game state
+                game_state = spaceship.update()
+
+                #update sprite groups
+                bullet_group.update()
+                star_group.update()
+                power_up_group.update()
+                laser_group.update()
+                boss_group.update()
+                boss_bullets_group.update()
+
+                #draw sprite groups
+                spaceship_group.draw(screen)
+                bullet_group.draw(screen)
+                star_group.draw(screen)
+                boss_group.draw(screen)
+                boss_bullets_group.draw(screen)
+                power_up_group.draw(screen)
+                laser_group.draw(screen)
+                
+                #check boss hp and change game state
+                if boss.health_rem == 0:
+                    game_state = 1
+
+            else:
+ 
+                if game_state == -1:    
+                    if end_time > score:
+                        score = end_time
+                        with open("score_mix.txt", "w") as file:
+                            file.write(str(score))
+                    
+                    draw_text("Game Over", FONT50, "white", screen_width / 2, screen_height / 2)
+                    if end_time == 0:
+                        end_time = round(elapsed_time, 2)
+                    draw_text(f"Time: {end_time}s", FONT30, "white", screen_width / 2, screen_height / 2 + 50)
+                    draw_text("Press R to restart or M for menu", FONT30, "white", screen_width / 2, screen_height / 2 + 100)
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_r]:
+                        star_group.empty()
+                        bullet_group.empty()
+                        power_up_group.empty()
+                        boss_bullets_group.empty()
+                        spaceship.reset()
+                        boss.reset()
+                        game_state = 0
+                        prepare_time = 4
+                        star_add_increment = 2000
+                        start_time = time.time()
+                        pygame.mixer.music.play(-1)
+                        end_time = 0
+                
+                elif game_state == 1:  
+                    draw_text("You Win!!", FONT50, "white", screen_width / 2, screen_height / 2)
+                    draw_text("Press R to restart or M for menu", FONT30, "white", screen_width / 2, screen_height / 2 + 100)
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_r]:
+                        star_group.empty()
+                        bullet_group.empty()
+                        power_up_group.empty()
+                        boss_bullets_group.empty()
+                        spaceship.reset()
+                        boss.reset()
+                        game_state = 0
+                        prepare_time = 4
+                        star_add_increment = 2000
+                        start_time = time.time()
+                        pygame.mixer.music.play(-1)
+                        end_time = 0
+                        
         #update animations
         explosion_group.update()
         #draw sprite groups
         spaceship_group.draw(screen)
         explosion_group.draw(screen)
+
+        if prepare_time > 0:
+            draw_text("Get Ready!", FONT50, "white", screen_width / 2, screen_height / 2)
+            draw_text(str(prepare_time), FONT30, "white", screen_width / 2, screen_height / 2 + 50)
+            count_timer = pygame.time.get_ticks()
+            if count_timer - last_second > 1000:
+                prepare_time -= 1
+                last_second = count_timer
         
         #events
         for event in pygame.event.get():
@@ -483,6 +583,9 @@ def game_boss():
                     break
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_m and (game_state == -1 or game_state == 1):
+                        star_group.empty()
+                        bullet_group.empty()
+                        power_up_group.empty()
                         boss_bullets_group.empty()
                         bullet_group.empty()
                         power_up_group.empty()
@@ -490,6 +593,10 @@ def game_boss():
                         boss.reset()
                         game_state = 0
                         start_time = time.time()
+                        prepare_time = 4
+                        star_add_increment = 2000
+                        start_time = time.time()
+                        end_time = 0
                         pygame.mixer.music.load("menu_song.mp3")
                         pygame.mixer.music.play(-1, 0.0)
                         menu.main_menu()
@@ -507,4 +614,6 @@ def game_boss():
 
         pygame.display.update()
     pygame.quit()
-  
+
+
+    
