@@ -137,6 +137,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.health_rem= self.health_start
         self.rect.center = [screen_width / 2, screen_height - 100]  # Reset position
         spaceship_group.add(spaceship)
+        self.laser = False
 
 #bullets
 class Bullets(pygame.sprite.Sprite):

@@ -150,6 +150,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.health_rem= self.health_start
         self.rect.center = [screen_width / 2, screen_height - 100]  # Reset position
         spaceship_group.add(spaceship)
+        self.laser = False
 
 #bullets
 class Bullets(pygame.sprite.Sprite):
@@ -303,6 +304,7 @@ class Boss(pygame.sprite.Sprite):
         self.health_rem= self.health_start
         self.rect.center = [int(screen_width/2), -400]  
         self.entry = False
+        self.shoot_interval = 100
         boss_group.add(boss)
 
 
