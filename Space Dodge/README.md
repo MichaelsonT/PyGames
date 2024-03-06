@@ -36,6 +36,11 @@ A final boss 🤔? ✔️
 <img src="./Gameplay_img/damage.PNG" width=350 height=500>
 <img align="right" src="./Gameplay_img/shot.PNG" width=350 height=500>
 <img src="./Gameplay_img/restart.PNG" width=500 height=500>
+<img src="./Gameplay_img/boss.PNG" width=500 height=500>
+<img align="left" src="./Gameplay_img/buffs1.PNG" width=300 height=300>
+<img align="right" src="./Gameplay_img/buffs2.PNG" width=500 height=500>
+
+
 
 
 
