@@ -2,9 +2,7 @@
 
 🚀Check my little game :D🚀
 
-To play the game, you just need to double-click the main.py.
-
-Dont forget to have python (https://www.python.org/ -> check add to Path) and pygames installed (on cmd "pip install pygame")
+To play the game, you just need to double-click the main.py. Dont forget to have python and pygames installed !
 
 Can u beat my High Score 🤩!?
 
