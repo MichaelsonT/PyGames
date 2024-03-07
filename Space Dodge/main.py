@@ -353,7 +353,7 @@ def game():
                 screen.blit(time_text, (10, 10))
 
                 #score
-                time_text = FONT30.render(f"Score: {score}s", 1, "white")
+                time_text = FONT30.render(f"High Score: {score}s", 1, "white")
                 screen.blit(time_text, (10, 50))
                 
                 
