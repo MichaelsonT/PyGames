@@ -31,14 +31,21 @@ A final boss 🤔? ✔️
 ## 🚀🤩 I accept more Suggestions 🤩🚀
 
 # Gameplay Pics
-<img src="./Gameplay_img/Menu.PNG" width=500 height=500>
-<img align="right" src="./Gameplay_img/space.PNG" width=500 height=500>
-<img src="./Gameplay_img/damage.PNG" width=350 height=500>
-<img align="right" src="./Gameplay_img/shot.PNG" width=350 height=500>
-<img src="./Gameplay_img/restart.PNG" width=500 height=500>
-<img src="./Gameplay_img/boss.PNG" width=500 height=500>
-<img align="left" src="./Gameplay_img/buffs1.PNG" width=300 height=300>
-<img align="right" src="./Gameplay_img/buffs2.PNG" width=500 height=500>
+
+<img src="./Gameplay_img/space.PNG" width=330 height=350> <img src="./Gameplay_img/boss.PNG" width=330 height=350> <img src="./Gameplay_img/buffs2.PNG" width=330 height=350>
+
+
+
+
+
+
+
+
+# Gameplay Vid
+
+https://github.com/DiogoFSPinheiro/PyGames/assets/143399294/34486cee-454c-49c4-a8bc-7ab1f05cc69d
+
+
 
 
 
