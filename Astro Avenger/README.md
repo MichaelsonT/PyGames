@@ -41,16 +41,6 @@ A final boss 🤔? ✔️
 
 
 
-# Gameplay Vid
-
-https://github.com/DiogoFSPinheiro/PyGames/assets/143399294/34486cee-454c-49c4-a8bc-7ab1f05cc69d
-
-
-
-
-
-
-
 
 
 
